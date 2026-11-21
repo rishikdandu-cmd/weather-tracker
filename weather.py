@@ -58,3 +58,27 @@ for year_data in all_data:
     dfs.append(df)
 
 historical_df = pd.concat(dfs, ignore_index=True)
+# Get the 7-day forecast
+forecast_data = get_forecast(LATITUDE, LONGITUDE)
+forecast_df = pd.DataFrame({
+    "date": forecast_data["daily"]["time"],
+    "max_temp": forecast_data["daily"]["temperature_2m_max"],
+    "min_temp": forecast_data["daily"]["temperature_2m_min"]
+})
+
+# Results
+print(f"Weather analysis for {LOCATION_NAME}")
+print("=" * 40)
+
+print("\n--- Historical Averages (last 5 years, your camping dates) ---")
+print(historical_df)
+print(f"\nAverage High: {historical_df['max_temp'].mean():.1f}°C")
+print(f"Average Low: {historical_df['min_temp'].mean():.1f}°C")
+
+print("\n--- 7-Day Forecast ---")
+print(forecast_df)
+
+# Save to CSV
+historical_df.to_csv("historical_weather.csv", index=False)
+forecast_df.to_csv("forecast_weather.csv", index=False)
+print("\nData saved to CSV files.")
